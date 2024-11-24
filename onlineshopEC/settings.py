@@ -38,8 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # AUTHENTICATION_BACKENDS
+    'django.contrib.sites',  #  django-allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # for google
+
     # Custom Apps
-    'core'
+    'core',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'onlineshopEC.urls'
@@ -132,3 +141,16 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#make CustomUser
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+
+#auth for google
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',  #singup with google
+)
+SITE_ID = 1
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = '<your-client-id>'
+SOCIAL_AUTH_GOOGLE_SECRET = '<your-client-secret>'

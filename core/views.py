@@ -4,4 +4,8 @@ from django.shortcuts import render
 
 # Create your views here.
 def index(request):
-    return render(request, 'core/index.html')
+    if request.user.is_authenticated:
+        # کاربر وارد شده است
+        return render(request, 'core/index-14.html')
+    else:
+        return HttpResponse('karbar nis')
