@@ -1,10 +1,10 @@
 from django.urls import path, include
-from accounts.views import login_view
+from accounts.views import auth_view, dashboard_view
 
 
 urlpatterns = [
-    path('login/', login_view, name='login_view'),
+    path('auth/', auth_view, name='auth_view'),
+    path('dashboard/', dashboard_view, name='dashboard_view'),
     path('', include('allauth.urls'))
-    #path('register/', views.register_view, name='register'),
-    #path('profile/', views.profile_view, name='profile'),
+
 ]
