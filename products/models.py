@@ -18,29 +18,50 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=255)  #
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    description = models.TextField(blank=True)
+    specifications = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    stock = models.PositiveIntegerField(default=0)
+
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name_plural = "Products"
+    @property
+    def is_on_discount(self):
+        return self.discount_price is not None and self.discount_price < self.price
+
+    def get_specifications(self):
+        return self.specifications.items()
 
 
-class ProductAttribute(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='attributes')
-    key = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
+class Attribute(models.Model):
+    name = models.CharField(max_length=255)  # نام ویژگی (مثلاً "رنگ", "سایز")
+    applicable_categories = models.ManyToManyField(Category, blank=True, related_name="attributes")  # دسته‌بندی‌های مرتبط
 
     def __str__(self):
-        return f"{self.key}: {self.value}"
+        return self.name
+
+    def is_applicable_to(self, category):
+        """بررسی می‌کند آیا ویژگی برای این دسته‌بندی مجاز است یا خیر"""
+        return self.applicable_categories.filter(id=category.id).exists()
+
+
+
+
+
+class AttributeValue(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='attributes')  # محصول
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)  # ویژگی
+    value = models.CharField(max_length=255)  # مقدار ویژگی (مثلاً "قرمز", "XL")
+
+    def __str__(self):
+        return f"{self.attribute.name}: {self.value}"
 
 
 class ProductImage(models.Model):

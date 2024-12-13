@@ -47,7 +47,7 @@
                                         <div class="product-gallery">
                                             <figure class="product-main-image">
                                                 <span class="product-label label-top">Top</span>
-                                                <img id="product-zoom" src="{% static 'assets/images/products/single/sidebar-gallery/1.jpg' %}" data-zoom-image="{% static 'assets/images/products/single/sidebar-gallery/1-big.jpg' %}" alt="product image">
+                                                <img id="product-zoom" src="{{ main_image.image.url }}" data-zoom-image="{{ main_image.image.url }}" alt="{{ product.name }}">
 
                                                 <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                     <i class="icon-arrows"></i>
@@ -55,28 +55,20 @@
                                             </figure><!-- End .product-main-image -->
 
                                             <div id="product-zoom-gallery" class="product-image-gallery">
-                                                <a class="product-gallery-item active" href="#" data-image="{% static 'assets/images/products/single/sidebar-gallery/1.jpg' %}" data-zoom-image="{% static 'assets/images/products/single/sidebar-gallery/1-big.jpg'%}">
-                                                    <img src="{% static 'assets/images/products/single/sidebar-gallery/1-small.jpg' %}" alt="product side">
-                                                </a>
-
-                                                <a class="product-gallery-item" href="#" data-image="{% static 'assets/images/products/single/sidebar-gallery/2-big.jpg' %}" data-zoom-image="{% static 'assets/images/products/single/sidebar-gallery/2-big.jpg'%}">
-                                                    <img src="{% static 'assets/images/products/single/sidebar-gallery/2-small.jpg' %}" alt="product cross">
-                                                </a>
-
-                                                <a class="product-gallery-item" href="#" data-image="{% static 'assets/images/products/single/sidebar-gallery/3-big.jpg' %}" data-zoom-image="{% static 'assets/images/products/single/sidebar-gallery/3-big.jpg'%}">
-                                                    <img src="{% static 'assets/images/products/single/sidebar-gallery/3-small.jpg' %}" alt="product with model">
-                                                </a>
-
-                                                <a class="product-gallery-item" href="#" data-image="{% static 'assets/images/products/single/sidebar-gallery/4-big.jpg' %}" data-zoom-image="{% static 'assets/images/products/single/sidebar-gallery/4-big.jpg'%}">
-                                                    <img src="{% static 'assets/images/products/single/sidebar-gallery/4-small.jpg' %}" alt="product back">
-                                                </a>
+                                                {% for image in product.images.all %}
+                                                    <a class="product-gallery-item" href="#" data-image="{{ image.image.url }}" data-zoom-image="{{ image.image.url }}">
+                                                    <img src="{{ image.image.url }}" alt={{ product.name }}>
+                                                    </a>
+                                                {% endfor %}
+                                               
+                                            
                                             </div><!-- End .product-image-gallery -->
                                         </div><!-- End .product-gallery -->
                                     </div><!-- End .col-md-6 -->
 
                                     <div class="col-md-6">
                                         <div class="product-details product-details-sidebar">
-                                            <h1 class="product-title">Black faux leather chain trim sandals</h1><!-- End .product-title -->
+                                            <h1 class="product-title">{{ product.name }}</h1><!-- End .product-title -->
 
                                             <div class="ratings-container">
                                                 <div class="ratings">
@@ -86,11 +78,11 @@
                                             </div><!-- End .rating-container -->
 
                                             <div class="product-price">
-                                                $90.00
+                                                ${{ product.price }}
                                             </div><!-- End .product-price -->
 
                                             <div class="product-content">
-                                                <p>Sed egestas, ante et vulputate volutpat, eros semper est, vitae luctus metus libero eu augue.</p>
+                                                <p>{{ product.description }}</p>
                                             </div><!-- End .product-content -->
 
                                             <div class="details-filter-row details-row-size">
@@ -136,9 +128,8 @@
                                             <div class="product-details-footer details-footer-col">
                                                 <div class="product-cat">
                                                     <span>Category:</span>
-                                                    <a href="#">Women</a>,
-                                                    <a href="#">Dresses</a>,
-                                                    <a href="#">Yellow</a>
+                                                    <a href="#">{{ product.category.parent }}</a>,
+                                                    <a href="#">{{ product.category}}</a>,
                                                 </div><!-- End .product-cat -->
 
                                                 <div class="social-icons social-icons-sm">
@@ -172,34 +163,27 @@
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                                         <div class="product-desc-content">
-                                            <h3>Product Information</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
-                                            <ul>
-                                                <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
-                                                <li>Vivamus finibus vel mauris ut vehicula.</li>
-                                                <li>Nullam a magna porttitor, dictum risus nec, faucibus sapien.</li>
-                                            </ul>
-
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
+                                            {{ product.description }}
                                         </div><!-- End .product-desc-content -->
                                     </div><!-- .End .tab-pane -->
                                     <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
                                         <div class="product-desc-content">
-                                            <h3>Information</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. </p>
-
-                                            <h3>Fabric & care</h3>
-                                            <ul>
-                                                <li>Faux suede fabric</li>
-                                                <li>Gold tone metal hoop handles.</li>
-                                                <li>RI branding</li>
-                                                <li>Snake print trim interior </li>
-                                                <li>Adjustable cross body strap</li>
-                                                <li> Height: 31cm; Width: 32cm; Depth: 12cm; Handle Drop: 61cm</li>
-                                            </ul>
-
-                                            <h3>Size</h3>
-                                            <p>one size</p>
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr class="table-dark">
+                                                        <th class="text-center">Key</th>
+                                                        <th class="text-center">Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for key, value in product.specifications.items %}
+                                                    <tr>
+                                                        <td class="text-center">{{ key }}</td>
+                                                        <td>{{ value }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
                                         </div><!-- End .product-desc-content -->
                                     </div><!-- .End .tab-pane -->
                                     <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
