@@ -8,6 +8,12 @@ class Category(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', on_delete=models.CASCADE)
 
+    def get_all_subcategories(self):
+        subcategories = Category.objects.filter(parent=self)
+        all_subcategories = list(subcategories)
+        for subcategory in subcategories:
+            all_subcategories.extend(subcategory.get_all_subcategories())
+        return all_subcategories
 
     def __str__(self):
         return self.name
