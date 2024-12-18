@@ -45,6 +45,32 @@ class Product(models.Model):
     def get_specifications(self):
         return self.specifications.items()
 
+    @property
+    def get_main_image(self):
+        """Returns the main image of the product if exists, otherwise None."""
+        return self.images.filter(is_main=True).first()
+
+    def get_related_products(self):
+        return Product.objects.filter(category=self.category).exclude(id=self.id)
+
+
+    @property
+    def popularity_percentage(self):
+        reviews = self.reviews.all()
+        total_votes = 0
+        helpful_votes = 0
+
+        for review in reviews:
+            total_votes += review.helpful_votes + review.unhelpful_votes
+            helpful_votes += review.helpful_votes
+
+        if total_votes == 0:
+            return 0
+
+
+        popularity = (helpful_votes / total_votes) * 100
+        return round(popularity, 2)
+
 
 class Attribute(models.Model):
     name = models.CharField(max_length=255)  # نام ویژگی (مثلاً "رنگ", "سایز")
@@ -75,6 +101,8 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='product_images/')
     is_main = models.BooleanField(default=False)
 
+
+
     def __str__(self):
         return f"Image for {self.product.name}"
 
@@ -91,7 +119,3 @@ class ProductReview(models.Model):
     def __str__(self):
         return f"Review by {self.user.username} for {self.product.name}"
 
-    @property
-    def vote_score(self):
-        """ (helpful - unhelpful)"""
-        return self.helpful_votes - self.unhelpful_votes

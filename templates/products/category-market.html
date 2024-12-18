@@ -379,7 +379,7 @@
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
                                                 <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-13/products/product-6.jpg' %}" alt="Product image" class="product-image">
+                                                    <img src="{{ product.get_main_image.image.url }}" alt="{{ product.name }}" class="product-image">
                                                 </a>
 
                                                 <div class="product-action-vertical">
@@ -395,17 +395,17 @@
 
                                             <div class="product-body">
                                                 <div class="product-cat">
-                                                    <a href="#">Appliances</a>
+                                                    <a href="#">{{ product.category }}</a>
                                                 </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">Neato Robotics</a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="product.html">{{ product.name }}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    $399.00
+                                                    {{ product.price  }}
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: {{ product.popularity_percentage }}%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 12 Reviews )</span>
+                                                    <span class="ratings-text">( {{ product.reviews.count }}Reviews )</span>
                                                 </div><!-- End .rating-container -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->

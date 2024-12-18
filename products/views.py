@@ -8,9 +8,13 @@ from products.models import Product, ProductImage, Category
 def product_detail_view(request, product_id):
     single_product = get_object_or_404(Product, id=product_id)
     main_image = single_product.images.filter(is_main=True).first()
+    related_products = single_product.get_related_products().prefetch_related('images')[:5]
+
+
     return render(request, 'products/product-sidebar.html',
                   {'product': single_product,
-                          'main_image': main_image,})
+                  'related_products': related_products,
+                  'main_image': main_image,})
 
 def product_list_view(request,  category_slug):
     # گرفتن دسته‌بندی با استفاده از اسلاگ
@@ -24,6 +28,8 @@ def product_list_view(request,  category_slug):
 
     # فیلتر کردن محصولات با توجه به دسته‌بندی و زیرمجموعه‌ها
     products = Product.objects.filter(category__in=subcategories)
+
+
 
 
     return render(request, 'products/category-market.html', {
