@@ -1,20 +1,37 @@
 from itertools import product
 from lib2to3.fixes.fix_input import context
-
-from django.shortcuts import render, get_object_or_404
-
-from products.models import Product, ProductImage, Category
+from products.form import ProductReviewForm
+from django.shortcuts import render, get_object_or_404, redirect
+from products.models import Product, ProductReview, Category
 
 def product_detail_view(request, product_id):
     single_product = get_object_or_404(Product, id=product_id)
     main_image = single_product.images.filter(is_main=True).first()
     related_products = single_product.get_related_products().prefetch_related('images')[:5]
+    reviews = ProductReview.objects.filter(product=single_product).order_by('-created_at')
+
+    review_form = None
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            review_form = ProductReviewForm(request.POST)
+            if review_form.is_valid():
+                review = review_form.save(commit=False)
+                review.product = single_product
+                review.user = request.user
+                review.save()
+
+                return redirect('product_detail_view', product_id=single_product.id)
+        else:
+            review_form = ProductReviewForm()
 
 
     return render(request, 'products/product-sidebar.html',
                   {'product': single_product,
                   'related_products': related_products,
-                  'main_image': main_image,})
+                  'main_image': main_image,
+                   'reviews': reviews,
+                   'review_form': review_form,
+                   })
 
 def product_list_view(request,  category_slug):
     # گرفتن دسته‌بندی با استفاده از اسلاگ

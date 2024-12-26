@@ -111,10 +111,15 @@ class ProductReview(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    title = models.CharField(max_length=255, default='')
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     helpful_votes = models.PositiveIntegerField(default=0)
     unhelpful_votes = models.PositiveIntegerField(default=0)
+
+    @property
+    def rating_percentage(self):
+        return (self.rating / 5) * 100
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.product.name}"
